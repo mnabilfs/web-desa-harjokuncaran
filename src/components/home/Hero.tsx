@@ -4,7 +4,7 @@ export default function Hero() {
       {/* Background Image Placeholder */}
       <div 
         className="absolute inset-0 w-full h-full bg-cover bg-center"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1596422846543-75c6fc197f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')" }}
+        style={{ backgroundImage: "url('/DSC_2088_kecil.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/20"></div>
       </div>

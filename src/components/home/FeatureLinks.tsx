@@ -4,14 +4,14 @@ import { Users, BarChart3, Settings, FileText } from "lucide-react";
 export default function FeatureLinks() {
   const features = [
     {
-      title: "Layanan Masyarakat",
+      title: "Layanan",
       icon: <Users className="w-12 h-12 text-[#0088cc]" strokeWidth={1.5} />,
-      href: "#"
+      href: "/layanan"
     },
     {
       title: "Potensi Desa",
       icon: <BarChart3 className="w-12 h-12 text-[#0088cc]" strokeWidth={1.5} />,
-      href: "#"
+      href: "/potensi-desa"
     },
     {
       title: "Pembangunan Desa",

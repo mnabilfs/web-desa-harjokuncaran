@@ -28,12 +28,12 @@ export default function Navbar() {
       href: "#", 
       hasDropdown: true,
       subItems: [
-        { name: "Struktur Organisasi", href: "#" },
-        { name: "Perangkat Desa", href: "#" },
-        { name: "Lembaga Desa", href: "#" }
+        { name: "Struktur Organisasi", href: "/organisasi" },
+        { name: "Perangkat Desa", href: "/organisasi/sekretaris-desa" },
+        { name: "Lembaga Desa", href: "/organisasi/lembaga-desa" }
       ]
     },
-    { name: "LAYANAN", href: "#", hasDropdown: false },
+    { name: "LAYANAN", href: "/layanan", hasDropdown: false },
     { 
       name: "INFORMASI", 
       href: "#", 
@@ -52,7 +52,7 @@ export default function Navbar() {
       href: "#", 
       hasDropdown: true,
       subItems: [
-        { name: "Desa Wisata Kopi", href: "#" }
+        { name: "Desa Wisata Kopi", href: "/potensi-desa" }
       ]
     },
     { name: "PRODUK HUKUM", href: "#", hasDropdown: false },
