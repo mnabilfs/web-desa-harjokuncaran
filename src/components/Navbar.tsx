@@ -135,6 +135,7 @@ export default function Navbar() {
               <li key={item.name}>
                 <Link
                   href={item.href}
+                  onClick={() => setIsOpen(false)}
                   className={`block px-4 py-2 font-semibold text-sm rounded-md ${
                     isActive(item) ? "bg-[#0088cc] text-white" : "text-gray-800"
                   }`}
@@ -146,7 +147,8 @@ export default function Navbar() {
                     {item.subItems.map((subItem) => (
                       <li key={subItem.name}>
                         <Link 
-                          href={subItem.href} 
+                          href={subItem.href}
+                          onClick={() => setIsOpen(false)}
                           className={`block px-4 py-2 text-sm rounded-md ${
                             pathname === subItem.href && subItem.href !== "#" 
                               ? "text-[#0088cc] font-bold" 
