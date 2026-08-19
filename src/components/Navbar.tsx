@@ -39,12 +39,12 @@ export default function Navbar() {
       href: "#", 
       hasDropdown: true,
       subItems: [
-        { name: "Berita", href: "#" },
-        { name: "Pengumuman", href: "#" },
-        { name: "Agenda Kegiatan", href: "#" },
-        { name: "Galeri", href: "#" },
-        { name: "Download", href: "#" },
-        { name: "APBDesa", href: "#" }
+        { name: "Berita", href: "/berita" },
+        { name: "Pengumuman", href: "/pengumuman" },
+        { name: "Agenda Kegiatan", href: "/agenda" },
+        { name: "Galeri", href: "/galeri" },
+        { name: "Download", href: "/download" },
+        { name: "APBDesa", href: "/apbdesa" }
       ]
     },
     { 
@@ -55,7 +55,7 @@ export default function Navbar() {
         { name: "Desa Wisata Kopi", href: "/potensi-desa" }
       ]
     },
-    { name: "PRODUK HUKUM", href: "#", hasDropdown: false },
+    { name: "PRODUK HUKUM", href: "/produkhukum", hasDropdown: false },
   ];
 
   const isActive = (item: any) => {

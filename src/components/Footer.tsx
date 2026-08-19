@@ -26,7 +26,7 @@ export default function Footer() {
             <p className="text-sm leading-relaxed mb-4 text-white/90">
               Website desa dibangun dengan tujuan sebagai media pelayanan publik resmi desa, yang dibangun dan dikelola oleh tim desa setempat. Dengan memanfaatkan website penyelenggaraan pelayanan publik dapat dilakukan secara cepat dan mudah
             </p>
-            <Link href="#" className="flex items-center text-sm font-semibold hover:underline">
+            <Link href="/about-us" className="flex items-center text-sm font-semibold hover:underline">
               selengkapnya <ArrowRight size={16} className="ml-1" />
             </Link>
           </div>

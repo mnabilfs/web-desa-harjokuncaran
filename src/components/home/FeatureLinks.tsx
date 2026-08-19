@@ -16,12 +16,12 @@ export default function FeatureLinks() {
     {
       title: "Pembangunan Desa",
       icon: <Settings className="w-12 h-12 text-[#0088cc]" strokeWidth={1.5} />,
-      href: "#"
+      href: "/berita"
     },
     {
       title: "Keuangan Desa",
       icon: <FileText className="w-12 h-12 text-[#0088cc]" strokeWidth={1.5} />,
-      href: "#"
+      href: "/apbdesa"
     }
   ];
 
