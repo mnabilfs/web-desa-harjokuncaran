@@ -1,13 +1,13 @@
 export default function GeographySection() {
   const geoInfo = [
     { label: "Kode PUM", value: ": 3507042010" },
-    { label: "Tahun Pembentukan", value: ":" },
-    { label: "Dasar Hukum", value: ":" },
-    { label: "Luas Wilayah", value: ":" },
-    { label: "Batas Sebelah Utara", value: ":" },
-    { label: "Batas Sebelah Selatan", value: ":" },
-    { label: "Batas Sebelah Timur", value: ":" },
-    { label: "Batas Sebelah Barat", value: ":" },
+    { label: "Tahun Pembentukan", value: ": 1949" },
+    { label: "Dasar Hukum", value: ": Undang-Undang Nomor 6 Tahun 2014 tentang Desa" },
+    { label: "Luas Wilayah", value: ": 1878 ha" },
+    { label: "Batas Sebelah Utara", value: ": Desa Sumbermanjing" },
+    { label: "Batas Sebelah Selatan", value: ": Desa Argotirto" },
+    { label: "Batas Sebelah Timur", value: ": Desa Klepu dan Desa Ringinkembar" },
+    { label: "Batas Sebelah Barat", value: ": Desa Sumbermanjing Wetan dan Desa Ringinsari" },
   ];
 
   return (

@@ -10,14 +10,15 @@ export default function OrganisasiWrapper({ children }: { children: React.ReactN
   const sidebarMenus = [
     { name: "Struktur Organisasi", href: "/organisasi" },
     { name: "Kepala Desa", href: "/organisasi/kepala-desa" },
-    { name: "Badan Permusyawaratan Desa", href: "/organisasi/badan-permusyawaratan-desa" },
     { name: "Sekretaris Desa", href: "/organisasi/sekretaris-desa" },
-    { name: "Kaur Pemerintahan", href: "/organisasi/kaur-pemerintahan" },
-    { name: "Kaur Pembangunan", href: "/organisasi/kaur-pembangunan" },
-    { name: "Kaur Pemberdayaan Masyarakat", href: "/organisasi/kaur-pemberdayaan-masyarakat" },
-    { name: "Kaur Kesejahteraan Rakyat", href: "/organisasi/kaur-kesejahteraan-rakyat" },
-    { name: "Kaur Umum", href: "/organisasi/kaur-umum" },
-    { name: "Kaur Keuangan", href: "/organisasi/kaur-keuangan" },
+    { name: "Kepala Urusan Umum", href: "/organisasi/kepala-urusan-umum" },
+    { name: "Kepala Urusan Keuangan", href: "/organisasi/kepala-urusan-keuangan" },
+    { name: "Kepala Urusan Perencanaan", href: "/organisasi/kepala-urusan-perencanaan" },
+    { name: "Kepala Seksi Pemerintahan", href: "/organisasi/kepala-seksi-pemerintahan" },
+    { name: "Kepala Seksi Kesejahteraan", href: "/organisasi/kepala-seksi-kesejahteraan" },
+    { name: "Kepala Seksi Pelayanan", href: "/organisasi/kepala-seksi-pelayanan" },
+    { name: "Kepala Dusun Krajan", href: "/organisasi/kepala-dusun-krajan" },
+    { name: "Kepala Dusun Mulyosari", href: "/organisasi/kepala-dusun-mulyosari" },
   ];
 
   const activeMenu = sidebarMenus.find(menu => menu.href === pathname) || sidebarMenus[0];

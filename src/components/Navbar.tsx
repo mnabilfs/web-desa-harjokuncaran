@@ -9,6 +9,8 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
+  if (pathname.startsWith("/auth") || pathname.startsWith("/admin")) return null;
+
   const menuItems = [
     { 
       name: "PROFIL DESA", 
@@ -40,7 +42,6 @@ export default function Navbar() {
       hasDropdown: true,
       subItems: [
         { name: "Berita", href: "/berita" },
-        { name: "Pengumuman", href: "/pengumuman" },
         { name: "Agenda Kegiatan", href: "/agenda" },
         { name: "Galeri", href: "/galeri" },
         { name: "Download", href: "/download" },

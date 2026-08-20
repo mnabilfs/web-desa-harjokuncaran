@@ -2,8 +2,12 @@
 
 import Link from "next/link";
 import { Phone, Mail, ArrowRight, ChevronUp } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/auth") || pathname.startsWith("/admin")) return null;
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,

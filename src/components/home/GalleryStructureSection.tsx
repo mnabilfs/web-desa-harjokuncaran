@@ -6,7 +6,6 @@ import { ChevronRight, ChevronLeft, Camera } from "lucide-react";
 export default function GalleryStructureSection() {
   const strukturOrganisasi = [
     "Kepala Desa",
-    "Badan Permusyawaratan Desa",
     "Sekretaris Desa",
     "Kaur Pemerintahan",
     "Kaur Pembangunan",

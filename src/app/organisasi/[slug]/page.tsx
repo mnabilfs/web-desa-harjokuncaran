@@ -22,35 +22,45 @@ export default async function OrganisasiSlugPage({ params }: { params: Promise<{
       contact: "0812-5678-9012",
       tupoksi: "Membantu Kepala Desa dalam bidang administrasi pemerintahan, serta memberikan pelayanan teknis administrasi kepada seluruh perangkat desa dan masyarakat."
     },
-    "kaur-pemerintahan": {
-      name: "Rudi Hermawan, S.H.",
-      contact: "0811-6789-0123",
-      tupoksi: "Membantu Kepala Desa dalam pelaksanaan manajemen urusan pemerintahan, pembinaan ketentraman dan ketertiban, urusan kependudukan, sipil, dan pertanahan."
-    },
-    "kaur-pembangunan": {
-      name: "Ir. Hendra Gunawan",
-      contact: "0822-7890-1234",
-      tupoksi: "Membantu Kepala Desa dalam mengelola administrasi pembangunan, perencanaan kegiatan fisik infrastruktur, dan pemeliharaan sarana prasarana desa."
-    },
-    "kaur-pemberdayaan-masyarakat": {
-      name: "Dwi Wahyuni, S.Pd.",
-      contact: "0857-8901-2345",
-      tupoksi: "Membantu membina dan memberdayakan masyarakat di bidang ekonomi produktif, UMKM, kegiatan sosial, budaya, pemuda, olahraga, dan Karang Taruna."
-    },
-    "kaur-kesejahteraan-rakyat": {
-      name: "M. Yusuf, S.Sos.",
-      contact: "0819-9012-3456",
-      tupoksi: "Membantu mengelola pelaksanaan pembinaan keagamaan, kesehatan masyarakat, keluarga berencana, pendidikan, dan penyaluran bantuan sosial (bansos)."
-    },
-    "kaur-umum": {
-      name: "Lina Marlina, A.Md.",
-      contact: "0812-0123-4567",
+    "kepala-urusan-umum": {
+      name: "Menunggu Penunjukan",
+      contact: "-",
       tupoksi: "Membantu Sekretaris Desa dalam urusan ketatausahaan, pengelolaan arsip surat menyurat, inventarisasi aset desa, perlengkapan, dan kerumahtanggaan desa."
     },
-    "kaur-keuangan": {
-      name: "Andi Saputra, S.E.",
-      contact: "0813-1234-5678",
+    "kepala-urusan-keuangan": {
+      name: "Menunggu Penunjukan",
+      contact: "-",
       tupoksi: "Membantu Sekretaris Desa dalam urusan administrasi keuangan, penyusunan rancangan APBDesa, pembukuan, verifikasi pengeluaran, dan pelaporan keuangan."
+    },
+    "kepala-urusan-perencanaan": {
+      name: "Menunggu Penunjukan",
+      contact: "-",
+      tupoksi: "Membantu Sekretaris Desa dalam urusan perencanaan pembangunan desa, inventarisasi data, dan penyusunan RPJMDesa serta RKPDesa."
+    },
+    "kepala-seksi-pemerintahan": {
+      name: "Menunggu Penunjukan",
+      contact: "-",
+      tupoksi: "Membantu Kepala Desa dalam pelaksanaan manajemen urusan pemerintahan, pembinaan ketentraman dan ketertiban, administrasi kependudukan, sipil, dan pertanahan."
+    },
+    "kepala-seksi-kesejahteraan": {
+      name: "Menunggu Penunjukan",
+      contact: "-",
+      tupoksi: "Membantu pelaksanaan pembinaan keagamaan, kesehatan masyarakat, keluarga berencana, pendidikan, dan penyaluran bantuan sosial kepada masyarakat."
+    },
+    "kepala-seksi-pelayanan": {
+      name: "Menunggu Penunjukan",
+      contact: "-",
+      tupoksi: "Melaksanakan tugas pelayanan sosial, penyuluhan, pemberdayaan masyarakat, dan peningkatan kapasitas sumber daya manusia di tingkat desa."
+    },
+    "kepala-dusun-krajan": {
+      name: "Menunggu Penunjukan",
+      contact: "-",
+      tupoksi: "Membantu Kepala Desa dalam pelaksanaan tugas kewilayahan di Dusun Krajan meliputi pembinaan ketentraman, ketertiban, serta pemberdayaan masyarakat dusun."
+    },
+    "kepala-dusun-mulyosari": {
+      name: "Menunggu Penunjukan",
+      contact: "-",
+      tupoksi: "Membantu Kepala Desa dalam pelaksanaan tugas kewilayahan di Dusun Mulyosari meliputi pembinaan ketentraman, ketertiban, serta pemberdayaan masyarakat dusun."
     }
   };
 
