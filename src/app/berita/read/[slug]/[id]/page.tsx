@@ -1,14 +1,19 @@
 import Link from "next/link";
 import { Home, Calendar, User } from "lucide-react";
 import NewsSidebar from "@/components/berita/NewsSidebar";
-import { newsData } from "@/data/news";
+import { createClient } from "@/utils/supabase/server";
+import { formatToIndonesianDate } from "@/utils/dateFormatter";
+
+export const revalidate = 0; // Disable caching to always show latest news
 
 export default async function NewsDetailPage({ params }: { params: Promise<{ slug: string, id: string }> }) {
   const resolvedParams = await params;
-  const news = newsData.find(n => n.id === resolvedParams.id);
+  
+  const supabase = await createClient();
+  const { data: news } = await supabase.from('berita').select('*').eq('id', resolvedParams.id).single();
   
   if (!news) {
-    return <div className="p-8 text-center">Berita tidak ditemukan</div>;
+    return <div className="p-8 text-center mt-20 min-h-[50vh]">Berita tidak ditemukan</div>;
   }
 
   // Format breadcrumb text agar jika kepanjangan ditambahkan elipsis
@@ -39,7 +44,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
             <div className="flex items-center text-xs text-gray-500 mb-6 gap-4">
               <div className="flex items-center">
                 <Calendar size={13} className="mr-1" />
-                <span>{news.date}</span>
+                <span>{formatToIndonesianDate(news.date)}</span>
               </div>
               <div className="flex items-center">
                 <User size={13} className="mr-1" />

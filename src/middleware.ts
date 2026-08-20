@@ -58,9 +58,14 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // refreshing the auth token
-  const { data: { user } } = await supabase.auth.getUser()
+  const isProtected = request.nextUrl.pathname.startsWith('/admin') || request.nextUrl.pathname.startsWith('/auth');
 
+  if (!isProtected) {
+    return supabaseResponse;
+  }
+
+  // refreshing the auth token (only for protected routes)
+  const { data: { user } } = await supabase.auth.getUser()
   // Protect admin routes
   if (request.nextUrl.pathname.startsWith('/admin') && !user) {
     const redirectUrl = request.nextUrl.clone()

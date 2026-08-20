@@ -33,11 +33,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: "Lembaga Desa", href: "/admin/pemerintahan/lembaga-desa" }
       ] 
     },
-    { name: "Berita", href: "/admin/berita", icon: <Newspaper size={20} /> },
-    { name: "Agenda", href: "/admin/agenda", icon: <Calendar size={20} /> },
-    { name: "Galeri", href: "/admin/galeri", icon: <ImageIcon size={20} /> },
+    { 
+      name: "Informasi", 
+      href: "#", 
+      icon: <Newspaper size={20} />, 
+      subItems: [
+        { name: "Berita", href: "/admin/informasi/berita" },
+        { name: "Agenda Kegiatan", href: "/admin/informasi/agenda" },
+        { name: "Galeri", href: "/admin/informasi/galeri" },
+        { name: "Download", href: "/admin/informasi/download" },
+        { name: "APBDesa", href: "/admin/informasi/apbdesa" }
+      ] 
+    },
     { name: "Produk Hukum", href: "/admin/produkhukum", icon: <Scale size={20} /> },
-    { name: "APBDesa", href: "/admin/apbdesa", icon: <FileText size={20} /> },
   ];
 
   const handleLogout = async () => {
