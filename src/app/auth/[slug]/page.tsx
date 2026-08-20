@@ -78,7 +78,7 @@ export default function LoginPage({ params }: { params: Promise<{ slug: string }
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="focus:ring-[#0088cc] focus:border-[#0088cc] block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border"
+                  className="focus:ring-[#0088cc] focus:border-[#0088cc] block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-black"
                   placeholder="admin@harjokuncaran.desa.id"
                 />
               </div>
@@ -100,7 +100,7 @@ export default function LoginPage({ params }: { params: Promise<{ slug: string }
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="focus:ring-[#0088cc] focus:border-[#0088cc] block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border"
+                  className="focus:ring-[#0088cc] focus:border-[#0088cc] block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 border text-black"
                   placeholder="••••••••"
                 />
               </div>

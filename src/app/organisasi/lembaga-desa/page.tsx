@@ -1,150 +1,124 @@
 "use client";
 
-import { useState } from "react";
-import { Users, Shield, Building, Home, Target, Heart, Briefcase, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Users, Building, ChevronRight, Image as ImageIcon } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 export default function LembagaDesaPage() {
   const [activeTab, setActiveTab] = useState(0);
+  const [lembaga, setLembaga] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const lembaga = [
-    {
-      id: "bpd",
-      name: "BPD",
-      fullName: "Badan Permusyawaratan Desa",
-      desc: "BPD merupakan 'parlemen' tingkat desa yang berfungsi membahas dan menyepakati Rancangan Peraturan Desa bersama Kepala Desa, menampung dan menyalurkan aspirasi masyarakat desa, serta melakukan pengawasan terhadap kinerja Kepala Desa.",
-      icon: <Building className="w-8 h-8 text-[#0088cc]" />,
-      ketua: "Bpk. Sutrisno, M.Pd.",
-      kegiatan: "Musyawarah Desa (Musdes), Pengawasan APBDesa, Jaring Aspirasi Warga."
-    },
-    {
-      id: "lpmd",
-      name: "LPMD",
-      fullName: "Lembaga Pemberdayaan Masyarakat Desa",
-      desc: "Wadah yang dibentuk atas prakarsa masyarakat untuk membantu Pemerintah Desa dalam merencanakan, melaksanakan, dan mengendalikan pembangunan desa secara partisipatif.",
-      icon: <Briefcase className="w-8 h-8 text-[#0088cc]" />,
-      ketua: "Bpk. Haryono, S.T.",
-      kegiatan: "Gotong Royong Pembangunan Fisik, Pelatihan Keterampilan, Evaluasi Pembangunan."
-    },
-    {
-      id: "pkk",
-      name: "PKK",
-      fullName: "Pemberdayaan Kesejahteraan Keluarga",
-      desc: "Gerakan nasional dalam pembangunan masyarakat yang tumbuh dari bawah, dengan wanita sebagai motor penggeraknya, bertujuan membangun keluarga yang sejahtera.",
-      icon: <Heart className="w-8 h-8 text-[#0088cc]" />,
-      ketua: "Ibu Hj. Siti Rahmawati",
-      kegiatan: "Posyandu, Penyuluhan Kesehatan Ibu & Anak, Pelatihan Ekonomi Kreatif."
-    },
-    {
-      id: "karang-taruna",
-      name: "Karang Taruna",
-      fullName: "Organisasi Kepemudaan Desa",
-      desc: "Organisasi sosial kepemudaan yang berfungsi sebagai wadah pembinaan dan pengembangan generasi muda desa di bidang usaha kesejahteraan sosial, olahraga, dan seni.",
-      icon: <Target className="w-8 h-8 text-[#0088cc]" />,
-      ketua: "Sdr. Wahyu Pratama",
-      kegiatan: "Turnamen Olahraga Antar Dusun, Pentas Seni, Kegiatan Bakti Sosial Pemuda."
-    },
-    {
-      id: "bumdes",
-      name: "BUMDes",
-      fullName: "Badan Usaha Milik Desa",
-      desc: "Lembaga usaha desa yang dikelola oleh masyarakat dan pemerintahan desa dalam upaya memperkuat perekonomian desa dan membangun kerekatan sosial masyarakat.",
-      icon: <Briefcase className="w-8 h-8 text-[#0088cc]" />,
-      ketua: "Bpk. Irwan Syah",
-      kegiatan: "Pengelolaan Pasar Desa, Simpan Pinjam, Unit Usaha Pariwisata & Pertanian."
-    },
-    {
-      id: "linmas",
-      name: "Linmas",
-      fullName: "Perlindungan Masyarakat (Hansip)",
-      desc: "Warga masyarakat yang disiapkan dan dibekali pengetahuan serta keterampilan untuk melaksanakan kegiatan penanganan bencana, memelihara keamanan, ketentraman dan ketertiban masyarakat.",
-      icon: <Shield className="w-8 h-8 text-[#0088cc]" />,
-      ketua: "Bpk. Ngatimin",
-      kegiatan: "Pengamanan Pemilu/Pilkades, Ronda Malam, Evakuasi Bencana Alam."
-    },
-    {
-      id: "rtrw",
-      name: "RT / RW",
-      fullName: "Rukun Tetangga / Rukun Warga",
-      desc: "Lembaga kemasyarakatan yang bertugas memelihara dan melestarikan nilai-nilai kehidupan masyarakat yang berdasarkan kegotongroyongan dan kekeluargaan.",
-      icon: <Home className="w-8 h-8 text-[#0088cc]" />,
-      ketua: "Para Ketua RT & RW se-Desa",
-      kegiatan: "Administrasi Kependudukan Tingkat Bawah, Kerja Bakti Lingkungan, Mediasi Warga."
-    }
-  ];
+  useEffect(() => {
+    const fetchLembaga = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.from('lembaga_desa').select('*').order('nama');
+      if (data) setLembaga(data);
+      setLoading(false);
+    };
+    fetchLembaga();
+  }, []);
+
+  if (loading) {
+    return <div className="p-8 text-center text-gray-500">Memuat data lembaga desa...</div>;
+  }
+
+  if (lembaga.length === 0) {
+    return <div className="p-8 text-center text-gray-500 bg-white rounded-xl shadow-sm border border-gray-100">Belum ada data lembaga desa yang dipublikasikan.</div>;
+  }
+
+  const activeLembaga = lembaga[activeTab];
 
   return (
-    <div className="w-full">
-      <div className="flex items-center mb-8 text-[15px]">
-        <span className="font-bold text-gray-700 w-32">Kategori Menu</span>
-        <span className="mx-2 font-semibold text-gray-600">:</span>
-        <span className="text-gray-600 font-semibold uppercase">Lembaga Desa</span>
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Tab Navigation (Sidebar for Tabs) */}
-        <div className="w-full lg:w-1/3 flex flex-col gap-2">
-          {lembaga.map((item, index) => (
+    <div className="flex flex-col lg:flex-row gap-6">
+      {/* Sidebar List */}
+      <div className="lg:w-1/3 space-y-2">
+        {lembaga.map((item, index) => {
+          const isActive = activeTab === index;
+          return (
             <button
               key={item.id}
               onClick={() => setActiveTab(index)}
-              className={`cursor-pointer flex items-center justify-between text-left w-full px-5 py-4 rounded-lg font-bold transition-all border ${
-                activeTab === index 
-                  ? "bg-[#0088cc] text-white border-[#0088cc] shadow-md transform scale-[1.02]" 
-                  : "bg-white text-gray-700 border-gray-200 hover:border-[#0088cc] hover:text-[#0088cc] hover:shadow-sm"
+              className={`w-full text-left px-5 py-4 rounded-xl flex items-center justify-between transition-all duration-200 ${
+                isActive 
+                  ? "bg-[#0088cc] text-white shadow-md transform scale-[1.02]" 
+                  : "bg-white text-gray-600 hover:bg-blue-50 border border-gray-100 shadow-sm"
               }`}
             >
-              <span>{item.name}</span>
-              <ChevronRight size={18} className={`transition-transform ${activeTab === index ? "translate-x-1" : ""}`} />
+              <div className="flex items-center space-x-3">
+                <span className="font-bold">{item.nama}</span>
+              </div>
+              <ChevronRight size={18} className={isActive ? "text-white" : "text-gray-400"} />
             </button>
-          ))}
-        </div>
+          );
+        })}
+      </div>
 
-        {/* Tab Content Area */}
-        <div className="w-full lg:w-2/3">
-          <div className="bg-white border border-gray-200 rounded-lg p-6 lg:p-8 shadow-sm min-h-[400px]">
-            
-            <div className="flex items-center border-b border-gray-100 pb-6 mb-6">
-              <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center shrink-0 border border-blue-100">
-                {lembaga[activeTab].icon}
+      {/* Main Content Area */}
+      <div className="lg:w-2/3">
+        {activeLembaga && (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 overflow-hidden relative">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-8 border-b border-gray-100 pb-8">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gray-50 rounded-2xl flex items-center justify-center shrink-0 border border-gray-200 shadow-inner overflow-hidden p-2">
+                {activeLembaga.logo_url ? (
+                  <img src={activeLembaga.logo_url} alt={activeLembaga.nama} className="w-full h-full object-contain" />
+                ) : (
+                  <Building size={48} className="text-[#0088cc] opacity-80" />
+                )}
               </div>
-              <div className="ml-5">
-                <h2 className="text-2xl font-extrabold text-gray-800">{lembaga[activeTab].name}</h2>
-                <p className="text-[#0088cc] font-semibold text-sm uppercase tracking-wider">{lembaga[activeTab].fullName}</p>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-sm font-bold text-gray-400 uppercase mb-2 tracking-wider">Profil Singkat</h3>
-                <p className="text-gray-700 leading-relaxed text-justify">
-                  {lembaga[activeTab].desc}
-                </p>
-              </div>
-
-              <div className="bg-gray-50 p-4 rounded-md border border-gray-100">
-                <div className="flex flex-col md:flex-row gap-6">
-                  <div className="flex-1">
-                    <h3 className="text-sm font-bold text-gray-400 uppercase mb-1 tracking-wider">Pengurus Inti (Ketua)</h3>
-                    <p className="text-gray-800 font-semibold flex items-center">
-                      <Users size={16} className="mr-2 text-[#0088cc]" />
-                      {lembaga[activeTab].ketua}
-                    </p>
-                  </div>
+              <div className="text-center sm:text-left">
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-2">{activeLembaga.nama}</h2>
+                <div className="inline-block bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-semibold border border-blue-100">
+                  Mitra Pemerintahan Desa
                 </div>
               </div>
-
-              <div>
-                <h3 className="text-sm font-bold text-gray-400 uppercase mb-2 tracking-wider">Kegiatan Utama</h3>
-                <ul className="list-disc pl-5 space-y-1 text-gray-700">
-                  {lembaga[activeTab].kegiatan.split(',').map((kegiatan, i) => (
-                    <li key={i}>{kegiatan.trim()}</li>
-                  ))}
-                </ul>
-              </div>
             </div>
 
+            {/* Content Details */}
+            <div className="space-y-8">
+              {/* Profil Singkat */}
+              <section>
+                <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                  <span className="w-8 h-8 bg-blue-100 text-[#0088cc] rounded-lg flex items-center justify-center mr-3">1</span>
+                  Profil Singkat
+                </h3>
+                <p className="text-gray-600 leading-relaxed text-justify bg-gray-50 p-4 rounded-xl border border-gray-100">
+                  {activeLembaga.deskripsi || "Belum ada deskripsi."}
+                </p>
+              </section>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Kepengurusan */}
+                <section>
+                  <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                    <span className="w-8 h-8 bg-blue-100 text-[#0088cc] rounded-lg flex items-center justify-center mr-3">2</span>
+                    Pengurus Inti
+                  </h3>
+                  <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <div className="flex items-start space-x-3 mb-1">
+                      <Users className="text-[#0088cc] mt-1 shrink-0" size={20} />
+                      <span className="font-medium text-gray-800 whitespace-pre-line leading-relaxed">{activeLembaga.pengurus_inti || "Belum ada data pengurus."}</span>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Kegiatan Utama */}
+                <section>
+                  <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                    <span className="w-8 h-8 bg-blue-100 text-[#0088cc] rounded-lg flex items-center justify-center mr-3">3</span>
+                    Kegiatan Utama
+                  </h3>
+                  <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                    <p className="text-gray-600 font-medium whitespace-pre-line leading-relaxed">
+                      {activeLembaga.kegiatan_utama || "Belum ada data kegiatan."}
+                    </p>
+                  </div>
+                </section>
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

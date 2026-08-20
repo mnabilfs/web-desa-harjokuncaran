@@ -1,128 +1,66 @@
 import { Phone, Briefcase, User } from "lucide-react";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function OrganisasiSlugPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = await params;
   const slug = resolvedParams.slug;
-  const jabatanName = slug.split('-').map(w => w.toUpperCase()).join(' ');
+  const jabatanNameTitle = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
-  // Data dinamis tiruan (dummy) untuk kebutuhan UI yang terlihat resmi
-  const dataMap: Record<string, { name: string, contact: string, tupoksi: string }> = {
-    "kepala-desa": {
-      name: "H. Budi Santoso, S.E., M.Si.",
-      contact: "0812-3456-7890",
-      tupoksi: "Menyelenggarakan pemerintahan desa, melaksanakan pembangunan, pembinaan kemasyarakatan, dan pemberdayaan masyarakat Desa Harjokuncaran."
-    },
-    "badan-permusyawaratan-desa": {
-      name: "Drs. Ahmad Wijaya",
-      contact: "0813-4567-8901",
-      tupoksi: "Menampung dan menyalurkan aspirasi masyarakat, serta melakukan pengawasan terhadap kinerja Kepala Desa dalam penyelenggaraan pemerintahan desa."
-    },
-    "sekretaris-desa": {
-      name: "Siti Aminah, S.A.P.",
-      contact: "0812-5678-9012",
-      tupoksi: "Membantu Kepala Desa dalam bidang administrasi pemerintahan, serta memberikan pelayanan teknis administrasi kepada seluruh perangkat desa dan masyarakat."
-    },
-    "kepala-urusan-umum": {
-      name: "Menunggu Penunjukan",
-      contact: "-",
-      tupoksi: "Membantu Sekretaris Desa dalam urusan ketatausahaan, pengelolaan arsip surat menyurat, inventarisasi aset desa, perlengkapan, dan kerumahtanggaan desa."
-    },
-    "kepala-urusan-keuangan": {
-      name: "Menunggu Penunjukan",
-      contact: "-",
-      tupoksi: "Membantu Sekretaris Desa dalam urusan administrasi keuangan, penyusunan rancangan APBDesa, pembukuan, verifikasi pengeluaran, dan pelaporan keuangan."
-    },
-    "kepala-urusan-perencanaan": {
-      name: "Menunggu Penunjukan",
-      contact: "-",
-      tupoksi: "Membantu Sekretaris Desa dalam urusan perencanaan pembangunan desa, inventarisasi data, dan penyusunan RPJMDesa serta RKPDesa."
-    },
-    "kepala-seksi-pemerintahan": {
-      name: "Menunggu Penunjukan",
-      contact: "-",
-      tupoksi: "Membantu Kepala Desa dalam pelaksanaan manajemen urusan pemerintahan, pembinaan ketentraman dan ketertiban, administrasi kependudukan, sipil, dan pertanahan."
-    },
-    "kepala-seksi-kesejahteraan": {
-      name: "Menunggu Penunjukan",
-      contact: "-",
-      tupoksi: "Membantu pelaksanaan pembinaan keagamaan, kesehatan masyarakat, keluarga berencana, pendidikan, dan penyaluran bantuan sosial kepada masyarakat."
-    },
-    "kepala-seksi-pelayanan": {
-      name: "Menunggu Penunjukan",
-      contact: "-",
-      tupoksi: "Melaksanakan tugas pelayanan sosial, penyuluhan, pemberdayaan masyarakat, dan peningkatan kapasitas sumber daya manusia di tingkat desa."
-    },
-    "kepala-dusun-krajan": {
-      name: "Menunggu Penunjukan",
-      contact: "-",
-      tupoksi: "Membantu Kepala Desa dalam pelaksanaan tugas kewilayahan di Dusun Krajan meliputi pembinaan ketentraman, ketertiban, serta pemberdayaan masyarakat dusun."
-    },
-    "kepala-dusun-mulyosari": {
-      name: "Menunggu Penunjukan",
-      contact: "-",
-      tupoksi: "Membantu Kepala Desa dalam pelaksanaan tugas kewilayahan di Dusun Mulyosari meliputi pembinaan ketentraman, ketertiban, serta pemberdayaan masyarakat dusun."
-    }
-  };
+  // Fetch dari Supabase Server
+  const supabase = await createClient();
+  const { data } = await supabase.from('perangkat_desa').select('*').eq('slug', slug).single();
 
-  const fallbackData = {
-    name: "Menunggu Penunjukan / Plt.",
-    contact: "-",
-    tupoksi: "Deskripsi tugas untuk jabatan ini belum tersedia atau masih dalam proses pembaruan data sistem."
-  };
-
-  const data = dataMap[slug] || fallbackData;
+  const name = data?.nama || "Menunggu Penunjukan / Plt.";
+  const contact = data?.kontak || "-";
+  const tupoksi = data?.tupoksi || "Deskripsi tugas untuk jabatan ini belum tersedia atau masih dalam proses pembaruan data sistem.";
+  const foto_url = data?.foto_url || null;
 
   return (
     <div className="text-gray-700">
-      
-      {/* Title / Identitas Singkat */}
-      <div className="flex items-center mb-8 text-[15px]">
-        <span className="font-bold text-gray-700 w-24">Jabatan</span>
-        <span className="mx-2">:</span>
-        <span className="text-gray-600 font-semibold">{jabatanName}</span>
-      </div>
-      
-      {/* Kartu Profil Resmi */}
-      <div className="flex flex-col md:flex-row gap-8 bg-white border border-gray-200 p-8 rounded-lg shadow-sm">
+      <h1 className="text-3xl font-extrabold text-[#0088cc] mb-8 pb-4 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between">
+        {jabatanNameTitle}
+        <span className="text-sm font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full mt-2 md:mt-0 w-max">
+          Pemerintahan Desa
+        </span>
+      </h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="md:col-span-1">
+          <div className="bg-gradient-to-br from-[#0088cc] to-[#00aaff] rounded-xl p-6 text-white text-center shadow-lg transform hover:-translate-y-1 transition-transform duration-300">
+            <div className="w-24 h-24 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-4 border-4 border-white/30 overflow-hidden">
+              {foto_url ? (
+                <img src={foto_url} alt={name} className="w-full h-full object-cover" />
+              ) : (
+                <User size={48} className="text-white" />
+              )}
+            </div>
+            <h3 className="text-xl font-bold mb-1">{name}</h3>
+            <p className="text-blue-100 text-sm font-medium mb-4">{jabatanNameTitle}</p>
+            
+            <div className="bg-white/10 rounded-lg p-3 flex items-center justify-center space-x-2 backdrop-blur-sm">
+              <Phone size={16} />
+              <span className="text-sm font-semibold">{contact}</span>
+            </div>
+          </div>
+        </div>
         
-        {/* Bagian Foto */}
-        <div className="w-full md:w-1/3 flex flex-col items-center">
-          <div className="w-48 h-64 bg-gray-100 border-2 border-gray-200 rounded overflow-hidden flex flex-col items-center justify-center mb-3 text-gray-300">
-            <User size={64} className="mb-2" />
-            <span className="text-xs text-gray-400">3 x 4</span>
-          </div>
-          <span className="text-xs text-gray-500 font-medium">Foto Dinas Resmi</span>
-        </div>
-
-        {/* Bagian Biodata & Tupoksi */}
-        <div className="w-full md:w-2/3 flex flex-col justify-start pt-2">
-          
-          <h2 className="text-2xl font-bold text-gray-800 mb-1">{data.name}</h2>
-          <p className="text-sm font-bold text-[#0088cc] mb-8 uppercase tracking-wide">{jabatanName}</p>
-
-          <div className="space-y-6">
-            <div className="flex items-start">
-              <Phone size={20} className="text-[#0088cc] mr-4 mt-1 shrink-0" />
-              <div>
-                <p className="text-sm font-bold text-gray-700 mb-1">Kontak Resmi (WA/Telp)</p>
-                <p className="text-gray-600 text-[15px]">{data.contact}</p>
+        <div className="md:col-span-2">
+          <div className="bg-white rounded-xl p-6 md:p-8 border border-gray-100 shadow-sm h-full">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="bg-blue-100 p-2 rounded-lg text-[#0088cc]">
+                <Briefcase size={24} />
               </div>
+              <h2 className="text-2xl font-bold text-gray-800">Tugas Pokok & Fungsi (Tupoksi)</h2>
             </div>
-
-            <div className="flex items-start">
-              <Briefcase size={20} className="text-[#0088cc] mr-4 mt-1 shrink-0" />
-              <div>
-                <p className="text-sm font-bold text-gray-700 mb-2">Tugas Pokok & Fungsi (Tupoksi)</p>
-                <p className="text-gray-600 text-[15px] leading-relaxed text-justify">
-                  {data.tupoksi}
-                </p>
-              </div>
+            
+            <div className="prose max-w-none text-gray-600 leading-relaxed text-justify">
+              {tupoksi.split('\n').map((paragraph: string, idx: number) => (
+                <p key={idx} className="mb-4">{paragraph}</p>
+              ))}
             </div>
           </div>
-          
         </div>
       </div>
-      
     </div>
   );
 }

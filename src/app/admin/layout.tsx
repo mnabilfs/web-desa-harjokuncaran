@@ -21,8 +21,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
 
-  const menuItems = [
+  const menuItems: { name: string, href: string, icon: JSX.Element, subItems?: { name: string, href: string }[] }[] = [
     { name: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} /> },
+    { 
+      name: "Pemerintahan", 
+      href: "#", 
+      icon: <Scale size={20} />, 
+      subItems: [
+        { name: "Struktur Organisasi", href: "/admin/pemerintahan/struktur-organisasi" },
+        { name: "Perangkat Desa", href: "/admin/pemerintahan/perangkat-desa" },
+        { name: "Lembaga Desa", href: "/admin/pemerintahan/lembaga-desa" }
+      ] 
+    },
     { name: "Berita", href: "/admin/berita", icon: <Newspaper size={20} /> },
     { name: "Agenda", href: "/admin/agenda", icon: <Calendar size={20} /> },
     { name: "Galeri", href: "/admin/galeri", icon: <ImageIcon size={20} /> },
@@ -64,21 +74,50 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           {menuItems.map((item) => {
-            const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
+            const hasSub = item.subItems && item.subItems.length > 0;
+            const isAnySubActive = hasSub && item.subItems.some(sub => pathname === sub.href);
+            const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href)) || isAnySubActive;
+
             return (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                  isActive 
-                    ? "bg-white text-[#0088cc] font-bold shadow-sm" 
-                    : "text-white/90 hover:bg-white/10"
-                }`}
-                onClick={() => setSidebarOpen(false)}
-              >
-                {item.icon}
-                <span>{item.name}</span>
-              </Link>
+              <div key={item.name} className="flex flex-col">
+                <Link
+                  href={item.href !== "#" ? item.href : "#"}
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                    isActive && !hasSub
+                      ? "bg-white text-[#0088cc] font-bold shadow-sm" 
+                      : (isAnySubActive ? "text-white font-bold bg-white/10" : "text-white/90 hover:bg-white/10")
+                  }`}
+                  onClick={(e) => {
+                    if (item.href !== "#") setSidebarOpen(false);
+                    else e.preventDefault(); // Just for visual grouping for now
+                  }}
+                >
+                  {item.icon}
+                  <span>{item.name}</span>
+                </Link>
+                
+                {hasSub && (
+                  <div className="ml-9 mt-1 flex flex-col space-y-1">
+                    {item.subItems.map((sub) => {
+                      const isSubActive = pathname === sub.href;
+                      return (
+                        <Link
+                          key={sub.name}
+                          href={sub.href}
+                          className={`px-3 py-2 text-sm rounded-lg transition-colors ${
+                            isSubActive 
+                              ? "bg-white text-[#0088cc] font-bold shadow-sm" 
+                              : "text-white/80 hover:bg-white/10"
+                          }`}
+                          onClick={() => setSidebarOpen(false)}
+                        >
+                          {sub.name}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             );
           })}
         </nav>
