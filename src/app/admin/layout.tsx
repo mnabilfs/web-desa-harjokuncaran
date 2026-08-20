@@ -21,7 +21,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const router = useRouter();
 
-  const menuItems: { name: string, href: string, icon: JSX.Element, subItems?: { name: string, href: string }[] }[] = [
+  const menuItems: { name: string, href: string, icon: React.ReactNode, subItems?: { name: string, href: string }[] }[] = [
     { name: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} /> },
     { 
       name: "Pemerintahan", 
@@ -83,7 +83,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           {menuItems.map((item) => {
             const hasSub = item.subItems && item.subItems.length > 0;
-            const isAnySubActive = hasSub && item.subItems.some(sub => pathname === sub.href);
+            const isAnySubActive = hasSub && item.subItems?.some(sub => pathname === sub.href);
             const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href)) || isAnySubActive;
 
             return (
@@ -106,7 +106,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 
                 {hasSub && (
                   <div className="ml-9 mt-1 flex flex-col space-y-1">
-                    {item.subItems.map((sub) => {
+                    {item.subItems?.map((sub) => {
                       const isSubActive = pathname === sub.href;
                       return (
                         <Link
