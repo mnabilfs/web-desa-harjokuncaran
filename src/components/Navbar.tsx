@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { Menu, X, ChevronDown } from "lucide-react";
 
 export default function Navbar() {
@@ -72,10 +73,8 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-20">
           {/* Logo Section */}
           <Link href="/" className="flex items-center space-x-2 cursor-pointer group shrink-0 mr-4">
-            <div className="w-10 h-10 md:w-11 md:h-11 bg-[#0088cc] rounded flex items-center justify-center text-white overflow-hidden shrink-0 transition-transform group-hover:scale-105">
-              <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 md:w-7 md:h-7" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
+            <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center shrink-0 transition-transform group-hover:scale-105">
+              <Image src="/icon.png" alt="Logo Desa Harjokuncaran" width={48} height={48} className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col justify-center whitespace-nowrap">
               <span className="font-bold text-[#1a202c] text-sm md:text-base leading-tight transition-colors group-hover:text-[#0088cc]">DESA HARJOKUNCARAN</span>
