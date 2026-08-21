@@ -1,50 +1,39 @@
 "use client";
 
-import { Download, Home, Search, FileText } from "lucide-react";
+import { Download, Scale, Home, Search, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { useEffect, useState } from "react";
 
 export default function ProdukHukumPage() {
-  // Data Dummy Produk Hukum
-  const [hukumData] = useState([
-    {
-      id: 1,
-      nomor: "01 Tahun 2026",
-      kategori: "Peraturan Desa (Perdes)",
-      judul: "Anggaran Pendapatan dan Belanja Desa (APBDesa) Tahun Anggaran 2026",
-      status: "Berlaku",
-      link: "#"
-    },
-    {
-      id: 2,
-      nomor: "03 Tahun 2025",
-      kategori: "Peraturan Kepala Desa",
-      judul: "Tata Cara Pengelolaan Tanah Kas Desa",
-      status: "Berlaku",
-      link: "#"
-    },
-    {
-      id: 3,
-      nomor: "12 Tahun 2024",
-      kategori: "Keputusan Kepala Desa",
-      judul: "Penetapan Susunan Pengurus BUMDes Harjokuncaran Komando",
-      status: "Berlaku",
-      link: "#"
-    },
-    {
-      id: 4,
-      nomor: "02 Tahun 2023",
-      kategori: "Peraturan Desa (Perdes)",
-      judul: "Pungutan Desa",
-      status: "Dicabut",
-      link: "#"
-    }
-  ]);
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  const supabase = createClient();
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      const { data } = await supabase
+        .from('produk_hukum')
+        .select('*')
+        .order('created_at', { ascending: false });
+        
+      if (data) {
+        setDocuments(data);
+      }
+      setLoading(false);
+    };
+    fetchDocuments();
+  }, []);
+
+  const filteredDocuments = documents.filter(doc => 
+    doc.title.toLowerCase().includes(searchKeyword.toLowerCase())
+  );
 
   return (
     <div className="flex flex-col w-full bg-gray-50 min-h-screen pb-16">
-      {/* Header Section */}
-      <div className="bg-white border-b border-gray-200 pt-8 pb-10">
+      <div className="bg-white border-b border-gray-200 pt-8 pb-8">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="flex items-center text-sm text-gray-500 mb-4">
             <Link href="/" className="hover:text-[#0088cc] flex items-center">
@@ -53,81 +42,88 @@ export default function ProdukHukumPage() {
             <span className="mx-2">/</span>
             <span className="text-gray-500 font-semibold">Produk Hukum</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-[#0088cc] mb-3">
-            Produk Hukum Desa Harjokuncaran
-          </h1>
-          <p className="text-gray-600 text-lg">
-            Jaringan Dokumentasi dan Informasi Hukum (JDIH) resmi Desa Harjokuncaran untuk transparansi tata kelola desa.
-          </p>
+          <h1 className="text-3xl font-bold text-[#0088cc] mb-2">Produk Hukum</h1>
+          <p className="text-gray-600">Arsip peraturan desa, keputusan kepala desa, dan dokumentasi hukum resmi lainnya milik Desa Harjokuncaran.</p>
         </div>
       </div>
 
       <div className="container mx-auto px-4 max-w-5xl mt-8">
         
-        {/* Search Bar UI */}
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-8 flex items-center">
-          <Search className="text-gray-400 ml-2 mr-4" size={20} />
-          <input 
-            type="text" 
-            placeholder="Cari berdasarkan judul atau nomor dokumen hukum..." 
-            className="w-full text-[15px] outline-none placeholder:text-gray-400 text-gray-700"
-          />
-          <button className="bg-[#0088cc] text-white px-5 py-2 rounded-md font-semibold text-sm hover:bg-blue-600 transition-colors hidden sm:block">
-            Cari
-          </button>
+        {/* Search Bar Section */}
+        <div className="mb-8 max-w-2xl">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <input 
+              type="text"
+              placeholder="Cari berdasarkan judul peraturan atau dokumen..."
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl text-gray-800 shadow-sm focus:border-[#0088cc] focus:ring-1 focus:ring-[#0088cc] outline-none transition-all font-medium"
+            />
+          </div>
         </div>
 
-        {/* Daftar Produk Hukum */}
-        <div className="flex flex-col gap-4">
-          {hukumData.map((item) => (
-            <div 
-              key={item.id} 
-              className="bg-white p-5 md:p-6 rounded-lg shadow-sm border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-md transition-shadow"
-            >
-              
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2 mb-2">
-                  <FileText size={16} className="text-gray-400" />
-                  <span className="text-sm font-semibold text-gray-500">Nomor: {item.nomor}</span>
+        {loading ? (
+          <div className="text-center py-20 text-gray-400">
+            <div className="animate-pulse flex flex-col items-center">
+              <Loader2 size={40} className="animate-spin text-gray-300 mb-4" />
+              <p>Memuat direktori hukum...</p>
+            </div>
+          </div>
+        ) : (!filteredDocuments || filteredDocuments.length === 0) ? (
+          <div className="text-center p-12 bg-white border border-gray-200 rounded-xl text-gray-500 shadow-sm flex flex-col items-center justify-center">
+            <Scale size={48} className="text-gray-300 mb-4" />
+            <p className="font-medium text-lg">
+              {searchKeyword ? "Tidak ada produk hukum yang cocok dengan kata kunci pencarian Anda." : "Belum ada arsip produk hukum yang dipublikasikan."}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredDocuments.map((doc) => (
+              <div key={doc.id} className="group bg-white rounded-2xl p-6 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-gray-100 hover:shadow-xl hover:border-blue-100 transition-all duration-300 flex flex-col relative overflow-hidden">
+                
+                {/* Decorative background element */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-50 to-transparent rounded-bl-full -z-0 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500"></div>
+                
+                <div className="relative z-10 flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-[#0088cc] shadow-sm border border-blue-100/50">
+                    <Scale size={24} className="group-hover:scale-110 transition-transform duration-300" />
+                  </div>
+                  <span className="px-3 py-1 bg-white border border-gray-200 rounded-full text-xs font-bold text-gray-600 shadow-sm">
+                    {doc.file_type}
+                  </span>
                 </div>
                 
-                <h2 className="text-lg md:text-xl font-bold text-gray-800 mb-4 leading-snug">
-                  {item.judul}
-                </h2>
+                <div className="relative z-10 flex-grow">
+                  <h2 className="text-lg font-bold text-gray-800 mb-2 line-clamp-3 group-hover:text-[#0088cc] transition-colors">{doc.title}</h2>
+                  <p className="text-sm font-medium text-gray-500 mb-6 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                    {doc.file_size}
+                  </p>
+                </div>
                 
-                <div className="flex flex-wrap items-center gap-2 md:gap-3">
-                  {/* Badge Kategori */}
-                  <span className={`text-xs font-bold px-3 py-1 rounded-full ${
-                    item.kategori.includes("Perdes") 
-                      ? "bg-blue-50 text-blue-600 border border-blue-200"
-                      : item.kategori.includes("Peraturan Kepala") 
-                      ? "bg-green-50 text-green-600 border border-green-200" 
-                      : "bg-yellow-50 text-yellow-600 border border-yellow-200"
-                  }`}>
-                    {item.kategori}
-                  </span>
-                  
-                  {/* Badge Status */}
-                  <span className={`text-xs font-bold px-3 py-1 rounded-full border ${
-                    item.status === "Berlaku" 
-                      ? "bg-emerald-50 text-emerald-600 border-emerald-200" 
-                      : "bg-red-50 text-red-500 border-red-200"
-                  }`}>
-                    Status: {item.status}
-                  </span>
+                <div className="relative z-10 mt-auto pt-4 border-t border-gray-100">
+                  <a 
+                    href={doc.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between w-full text-[#0088cc] font-semibold group/btn hover:text-blue-700 transition-colors"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Download size={18} className="group-hover/btn:-translate-y-0.5 transition-transform" />
+                      Unduh Dokumen
+                    </span>
+                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center group-hover/btn:bg-[#0088cc] group-hover/btn:text-white transition-colors">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                      </svg>
+                    </div>
+                  </a>
                 </div>
               </div>
-
-              {/* Action Button */}
-              <button className="w-full md:w-auto flex items-center justify-center gap-2 border-2 border-[#0088cc] text-[#0088cc] font-bold py-2.5 px-5 rounded-md hover:bg-[#0088cc] hover:text-white transition-colors shrink-0">
-                <Download size={18} />
-                Unduh / Lihat Detail
-              </button>
-              
-            </div>
-          ))}
-        </div>
-        
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
