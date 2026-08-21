@@ -3,9 +3,40 @@
 import Link from "next/link";
 import { Phone, Mail, ArrowRight, ChevronUp } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Footer() {
   const pathname = usePathname();
+  const [todayVisitors, setTodayVisitors] = useState<number>(0);
+  const [totalVisitors, setTotalVisitors] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchVisitors = async () => {
+      try {
+        const supabase = createClient();
+        const today = new Date().toISOString().split('T')[0];
+        
+        const { data: todayData } = await supabase
+          .from('page_views')
+          .select('view_count')
+          .eq('view_date', today)
+          .single();
+          
+        if (todayData) setTodayVisitors(todayData.view_count);
+        
+        const { data: allData } = await supabase.from('page_views').select('view_count');
+        if (allData) {
+          const total = allData.reduce((acc, row) => acc + row.view_count, 0);
+          setTotalVisitors(total);
+        }
+      } catch (e) {
+        console.error("Gagal mengambil data visitor", e);
+      }
+    };
+    
+    fetchVisitors();
+  }, [pathname]);
 
   if (pathname.startsWith("/auth") || pathname.startsWith("/admin")) return null;
   const scrollToTop = () => {
@@ -56,11 +87,11 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="bg-white/10 rounded-md p-4 text-center border border-white/20">
               <h4 className="font-semibold mb-2">Total Visitor Hari Ini</h4>
-              <p className="text-2xl font-bold">0 Visitor</p>
+              <p className="text-2xl font-bold">{todayVisitors} Visitor</p>
             </div>
             <div className="bg-white/10 rounded-md p-4 text-center border border-white/20">
               <h4 className="font-semibold mb-2">Total Visitor Sepanjang Waktu</h4>
-              <p className="text-2xl font-bold">0 Visitor</p>
+              <p className="text-2xl font-bold">{totalVisitors} Visitor</p>
             </div>
           </div>
         </div>
@@ -68,7 +99,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-white/20 pt-6 mt-8 flex flex-col md:flex-row justify-between items-center relative">
           <p className="text-sm text-white/90">WebsiteDesa</p>
-          <p className="text-sm text-white/90 mt-2 md:mt-0 font-bold">2020-2026 © Kementerian Komunikasi dan Digital RI.</p>
+          <p className="text-sm text-white/90 mt-2 md:mt-0 font-bold">© 2026 Desa Harjokuncaran | Developed by KKN 171 UMM.</p>
         </div>
       </div>
       

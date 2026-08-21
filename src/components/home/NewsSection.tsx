@@ -6,8 +6,15 @@ import { formatToIndonesianDate } from "@/utils/dateFormatter";
 
 export default async function NewsSection() {
   const supabase = await createClient();
-  const { data: newsList } = await supabase.from('berita').select('*').order('date', { ascending: false }).limit(2);
-  const { data: agendaList } = await supabase.from('agenda').select('*').order('date', { ascending: false }).limit(4);
+  
+  // Ambil data secara bersamaan (paralel) untuk mempercepat loading
+  const [
+    { data: newsList },
+    { data: agendaList }
+  ] = await Promise.all([
+    supabase.from('berita').select('*').order('date', { ascending: false }).limit(2),
+    supabase.from('agenda').select('*').order('date', { ascending: false }).limit(4)
+  ]);
 
   return (
     <div className="bg-white py-12">

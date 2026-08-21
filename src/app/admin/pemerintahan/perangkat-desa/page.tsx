@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { compressImage } from "@/utils/imageCompressor";
 import { createClient } from "@/utils/supabase/client";
 import { Edit2, Save, X, Loader2, CheckCircle2, Image as ImageIcon } from "lucide-react";
 
@@ -70,9 +71,10 @@ export default function PerangkatDesaAdmin() {
     let finalFotoUrl = existingFotoUrl;
 
     if (fotoFile) {
-      const fileExt = fotoFile.name.split('.').pop();
+        const compressedFile = await compressImage(fotoFile);
+        const fileExt = compressedFile.name.split('.').pop();
       const fileName = `perangkat_${Date.now()}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage.from('public_assets').upload(fileName, fotoFile);
+      const { error: uploadError } = await supabase.storage.from('public_assets').upload(fileName, compressedFile);
       
       if (!uploadError) {
         const { data: publicUrlData } = supabase.storage.from('public_assets').getPublicUrl(fileName);

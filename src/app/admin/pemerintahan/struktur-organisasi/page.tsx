@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { compressImage } from "@/utils/imageCompressor";
 import { createClient } from "@/utils/supabase/client";
 import { Upload, Image as ImageIcon, Save, Loader2, CheckCircle2 } from "lucide-react";
 
@@ -37,13 +38,14 @@ export default function StrukturOrganisasiAdmin() {
     setLoading(true);
     setSuccessMsg("");
 
-    const fileExt = file.name.split('.').pop();
+    const compressedFile = await compressImage(file);
+    const fileExt = compressedFile.name.split('.').pop() || 'jpg';
     const fileName = `struktur_organisasi_${Math.random()}.${fileExt}`;
 
     // Upload to bucket
     const { error: uploadError } = await supabase.storage
       .from('public_assets')
-      .upload(fileName, file);
+      .upload(fileName, compressedFile);
 
     if (uploadError) {
       alert("Gagal mengunggah gambar: " + uploadError.message);

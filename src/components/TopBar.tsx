@@ -24,22 +24,25 @@ export default function TopBar() {
   };
 
   return (
-    <div className="bg-[#0088cc] text-white py-2 text-sm w-full">
-      <div className="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center max-w-6xl">
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-1">
-            <Phone size={14} />
+    <div className="bg-[#0088cc] text-white py-1.5 sm:py-2 text-[11px] sm:text-sm w-full border-b border-blue-600/30">
+      <div className="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center max-w-6xl gap-1.5 sm:gap-0">
+        
+        <div className="flex flex-col sm:flex-row items-center sm:space-x-4 space-y-1 sm:space-y-0 w-full sm:w-auto text-center">
+          <div className="flex items-center space-x-1.5">
+            <Phone size={12} className="sm:w-3.5 sm:h-3.5 shrink-0" />
             <span>-</span>
           </div>
-          <div className="flex items-center space-x-1">
-            <Mail size={14} />
-            <span>harjokuncaran.sumbermanjingwetan@malangkab.go.id</span>
+          <div className="flex items-center space-x-1.5">
+            <Mail size={12} className="sm:w-3.5 sm:h-3.5 shrink-0" />
+            <span className="truncate max-w-[280px] sm:max-w-none">harjokuncaran.sumbermanjingwetan@malangkab.go.id</span>
           </div>
         </div>
-        <div className="flex items-center space-x-1 mt-2 sm:mt-0">
-          <Globe size={14} />
-          <span onClick={handleSecretClick} className="cursor-default select-none">MALANG</span>
+        
+        <div className="flex items-center space-x-1.5 mt-0.5 sm:mt-0 justify-center">
+          <Globe size={12} className="sm:w-3.5 sm:h-3.5 shrink-0" />
+          <span onClick={handleSecretClick} className="cursor-default select-none tracking-wide">KAB. MALANG</span>
         </div>
+
       </div>
     </div>
   );

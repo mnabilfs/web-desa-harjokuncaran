@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { compressImage } from "@/utils/imageCompressor";
 import { createClient } from "@/utils/supabase/client";
 import { Save, X, Loader2, CheckCircle2, Plus, Trash2, Edit2, Image as ImageIcon, Search, BarChart3 } from "lucide-react";
 import Image from "next/image";
@@ -125,11 +126,12 @@ export default function APBDesaAdmin() {
     
     // Upload image if a new file is selected
     if (file) {
-      const fileExt = file.name.split('.').pop();
+      const compressedFile = await compressImage(file);
+      const fileExt = compressedFile.name.split('.').pop() || 'jpg';
       const fileName = `apbdesa_${Math.random().toString(36).substring(2, 10)}_${Date.now()}.${fileExt}`;
       const { error: uploadError } = await supabase.storage
         .from('public_assets')
-        .upload(fileName, file);
+        .upload(fileName, compressedFile);
 
       if (uploadError) {
         alert("Gagal mengunggah gambar: " + uploadError.message);

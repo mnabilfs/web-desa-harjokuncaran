@@ -1,9 +1,19 @@
 export default function Hero() {
   return (
-    <div className="relative w-full h-[500px] md:h-[600px] bg-gray-200">
+    <div className="relative w-full h-[500px] md:h-[600px] bg-gray-200 overflow-hidden">
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes zoomOut {
+          from { transform: scale(1.2); }
+          to { transform: scale(1); }
+        }
+        .animate-zoom-out {
+          animation: zoomOut 5s ease-out forwards;
+        }
+      `}} />
+      
       {/* Background Image Placeholder */}
       <div 
-        className="absolute inset-0 w-full h-full bg-cover bg-center"
+        className="absolute inset-0 w-full h-full bg-cover bg-center animate-zoom-out"
         style={{ backgroundImage: "url('/DSC_2088_kecil.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/20"></div>

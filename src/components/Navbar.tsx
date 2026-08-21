@@ -129,7 +129,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-100">
+        <div className="lg:hidden bg-white border-t border-gray-100 max-h-[calc(100vh-120px)] overflow-y-auto shadow-inner">
           <ul className="px-4 py-4 space-y-4">
             {menuItems.map((item) => (
               <li key={item.name}>

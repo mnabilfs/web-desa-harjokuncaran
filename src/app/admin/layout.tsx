@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { 
@@ -20,6 +20,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  // Sistem Keamanan: Logout Otomatis jika menganggur 15 Menit
+  useEffect(() => {
+    const IDLE_TIMEOUT_MS = 15 * 60 * 1000; // 15 Menit
+    let timeoutId: NodeJS.Timeout;
+
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(async () => {
+        const supabase = createClient();
+        await supabase.auth.signOut();
+        alert("Sesi Admin telah berakhir karena Anda tidak aktif selama 15 menit. Silakan login kembali demi keamanan.");
+        router.push("/");
+      }, IDLE_TIMEOUT_MS);
+    };
+
+    resetTimer();
+
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+    events.forEach(event => window.addEventListener(event, resetTimer, true));
+
+    return () => {
+      clearTimeout(timeoutId);
+      events.forEach(event => window.removeEventListener(event, resetTimer, true));
+    };
+  }, [router]);
 
   const menuItems: { name: string, href: string, icon: React.ReactNode, subItems?: { name: string, href: string }[] }[] = [
     { name: "Dashboard", href: "/admin", icon: <LayoutDashboard size={20} /> },

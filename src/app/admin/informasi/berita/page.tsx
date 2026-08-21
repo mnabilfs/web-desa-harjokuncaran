@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { compressImage } from "@/utils/imageCompressor";
 import { createClient } from "@/utils/supabase/client";
 import { Edit2, Save, X, Loader2, CheckCircle2, Plus, Trash2, Image as ImageIcon, Search } from "lucide-react";
 import { formatToIndonesianDate } from "@/utils/dateFormatter";
@@ -111,9 +112,10 @@ export default function BeritaAdmin() {
     let finalImageUrl = existingImageUrl;
 
     if (imageFile) {
-      const fileExt = imageFile.name.split('.').pop();
+        const compressedFile = await compressImage(imageFile);
+        const fileExt = compressedFile.name.split('.').pop();
       const fileName = `berita_${Date.now()}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage.from('public_assets').upload(fileName, imageFile);
+      const { error: uploadError } = await supabase.storage.from('public_assets').upload(fileName, compressedFile);
       
       if (!uploadError) {
         const { data: publicUrlData } = supabase.storage.from('public_assets').getPublicUrl(fileName);
