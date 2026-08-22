@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { compressImage } from "@/utils/imageCompressor";
 import { createClient } from "@/utils/supabase/client";
-import { Edit2, Save, X, Loader2, CheckCircle2, Plus, Trash2, Image as ImageIcon } from "lucide-react";
+import { Edit2, Save, X, Loader2, CheckCircle2, Plus, Trash2, Image as ImageIcon, ArrowUp, ArrowDown } from "lucide-react";
 
 export default function LembagaDesaAdmin() {
   const [lembaga, setLembaga] = useState<any[]>([]);
@@ -17,8 +17,8 @@ export default function LembagaDesaAdmin() {
   // Form States
   const [nama, setNama] = useState("");
   const [deskripsi, setDeskripsi] = useState("");
-  const [pengurusInti, setPengurusInti] = useState("");
-  const [kegiatanUtama, setKegiatanUtama] = useState("");
+  const [pengurusList, setPengurusList] = useState<{nama: string, jabatan: string}[]>([{nama: "", jabatan: "Ketua"}]);
+  const [kegiatanList, setKegiatanList] = useState<string[]>([""]);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [existingLogoUrl, setExistingLogoUrl] = useState<string | null>(null);
   
@@ -29,14 +29,16 @@ export default function LembagaDesaAdmin() {
 
   const fetchLembaga = async () => {
     setLoading(true);
-    const { data } = await supabase.from('lembaga_desa').select('*').order('nama');
+    const { data } = await supabase.from('lembaga_desa').select('*').order('urutan', { ascending: true }).order('nama', { ascending: true });
     if (data) setLembaga(data);
     setLoading(false);
   };
 
   const openAddModal = () => {
     setEditingId(null);
-    setNama(""); setDeskripsi(""); setPengurusInti(""); setKegiatanUtama("");
+    setNama(""); setDeskripsi("");
+    setPengurusList([{nama: "", jabatan: "Ketua"}]);
+    setKegiatanList([""]);
     setLogoFile(null); setExistingLogoUrl(null);
     setIsModalOpen(true);
   };
@@ -45,8 +47,32 @@ export default function LembagaDesaAdmin() {
     setEditingId(item.id);
     setNama(item.nama);
     setDeskripsi(item.deskripsi || "");
-    setPengurusInti(item.pengurus_inti || "");
-    setKegiatanUtama(item.kegiatan_utama || "");
+    
+    let parsedPengurus = [{nama: "", jabatan: "Ketua"}];
+    if (item.pengurus_inti) {
+      try {
+        const parsed = JSON.parse(item.pengurus_inti);
+        if (Array.isArray(parsed)) parsedPengurus = parsed;
+        else parsedPengurus = [{nama: item.pengurus_inti, jabatan: "Ketua"}];
+      } catch (e) {
+        parsedPengurus = [{nama: item.pengurus_inti, jabatan: "Ketua"}];
+      }
+    }
+    setPengurusList(parsedPengurus);
+    
+    let parsedKegiatan = [""];
+    if (item.kegiatan_utama) {
+      try {
+        const parsed = JSON.parse(item.kegiatan_utama);
+        if (Array.isArray(parsed)) parsedKegiatan = parsed;
+        else parsedKegiatan = item.kegiatan_utama.split('\n').filter((k: string) => k.trim() !== '');
+      } catch (e) {
+        parsedKegiatan = item.kegiatan_utama.split('\n').filter((k: string) => k.trim() !== '');
+      }
+    }
+    if (parsedKegiatan.length === 0) parsedKegiatan = [""];
+    setKegiatanList(parsedKegiatan);
+    
     setLogoFile(null);
     setExistingLogoUrl(item.logo_url);
     setIsModalOpen(true);
@@ -58,6 +84,29 @@ export default function LembagaDesaAdmin() {
     setLoading(true);
     await supabase.from('lembaga_desa').delete().eq('id', id);
     setSuccessMsg(`Lembaga ${name} berhasil dihapus.`);
+    fetchLembaga();
+  };
+
+  const handleMoveOrder = async (index: number, direction: 'up' | 'down') => {
+    if (direction === 'up' && index === 0) return;
+    if (direction === 'down' && index === lembaga.length - 1) return;
+
+    setLoading(true);
+    const newLembaga = [...lembaga];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    
+    // Swap array position
+    const temp = newLembaga[index];
+    newLembaga[index] = newLembaga[targetIndex];
+    newLembaga[targetIndex] = temp;
+
+    // Normalisasi ulang semua urutan dari 1 sampai seterusnya
+    await Promise.all(
+      newLembaga.map((item, i) => 
+        supabase.from('lembaga_desa').update({ urutan: i + 1 }).eq('id', item.id)
+      )
+    );
+    
     fetchLembaga();
   };
 
@@ -83,8 +132,8 @@ export default function LembagaDesaAdmin() {
     const payload = {
       nama,
       deskripsi,
-      pengurus_inti: pengurusInti,
-      kegiatan_utama: kegiatanUtama,
+      pengurus_inti: JSON.stringify(pengurusList),
+      kegiatan_utama: JSON.stringify(kegiatanList.filter(k => k.trim() !== "")),
       logo_url: finalLogoUrl
     };
 
@@ -139,7 +188,7 @@ export default function LembagaDesaAdmin() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {lembaga.map((item) => (
+          {lembaga.map((item, index) => (
             <div key={item.id} className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
               <div className="p-6 flex-1">
                 <div className="flex items-center justify-between mb-4">
@@ -151,6 +200,8 @@ export default function LembagaDesaAdmin() {
                     )}
                   </div>
                   <div className="flex space-x-2">
+                    <button onClick={() => handleMoveOrder(index, 'up')} disabled={index === 0} className="p-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-30"><ArrowUp size={16} /></button>
+                    <button onClick={() => handleMoveOrder(index, 'down')} disabled={index === lembaga.length - 1} className="p-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 disabled:opacity-30"><ArrowDown size={16} /></button>
                     <button onClick={() => openEditModal(item)} className="p-2 text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100"><Edit2 size={16} /></button>
                     <button onClick={() => handleDelete(item.id, item.nama)} className="p-2 text-red-600 bg-red-50 rounded-md hover:bg-red-100"><Trash2 size={16} /></button>
                   </div>
@@ -158,7 +209,27 @@ export default function LembagaDesaAdmin() {
                 <h3 className="font-bold text-lg text-gray-800 mb-2">{item.nama}</h3>
                 <p className="text-sm text-gray-600 line-clamp-3 mb-4">{item.deskripsi}</p>
                 <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg">
-                  <p><strong>Pengurus:</strong> {item.pengurus_inti || "-"}</p>
+                  <div className="mb-2">
+                    <strong>Pengurus:</strong>
+                    <div className="text-gray-700 mt-1 space-y-1">
+                      {(() => {
+                        try {
+                          const parsed = JSON.parse(item.pengurus_inti || "[]");
+                          if (Array.isArray(parsed) && parsed.length > 0) {
+                            return parsed.map((p: any, i: number) => (
+                              <div key={i} className="flex justify-between border-b border-gray-100 pb-1">
+                                <span>{p.nama}</span>
+                                <span className="text-[#0088cc] font-medium">{p.jabatan}</span>
+                              </div>
+                            ));
+                          }
+                        } catch (e) {
+                          return <div>{item.pengurus_inti || "-"}</div>;
+                        }
+                        return <div>-</div>;
+                      })()}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -197,13 +268,98 @@ export default function LembagaDesaAdmin() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Pengurus Inti</label>
-                <input type="text" value={pengurusInti} onChange={e => setPengurusInti(e.target.value)} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black focus:ring-[#0088cc] focus:border-[#0088cc]" placeholder="Contoh: Ketua: Budi, Sekretaris: Ani" />
+                <label className="block text-sm font-medium text-gray-700 mb-2">Pengurus Inti</label>
+                <div className="space-y-3">
+                  {pengurusList.map((pengurus, idx) => (
+                    <div key={idx} className="flex space-x-2 items-center">
+                      <input 
+                        type="text" 
+                        value={pengurus.nama} 
+                        onChange={(e) => {
+                          const newList = [...pengurusList];
+                          newList[idx].nama = e.target.value;
+                          setPengurusList(newList);
+                        }}
+                        className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-black focus:ring-[#0088cc] focus:border-[#0088cc]" 
+                        placeholder="Nama Pengurus" 
+                      />
+                      <select 
+                        value={pengurus.jabatan}
+                        onChange={(e) => {
+                          const newList = [...pengurusList];
+                          newList[idx].jabatan = e.target.value;
+                          setPengurusList(newList);
+                        }}
+                        className="w-1/3 border border-gray-300 rounded-lg px-3 py-2 text-black focus:ring-[#0088cc] focus:border-[#0088cc]"
+                      >
+                        <option value="Ketua">Ketua</option>
+                        <option value="Wakil Ketua">Wakil Ketua</option>
+                        <option value="Sekretaris">Sekretaris</option>
+                        <option value="Bendahara">Bendahara</option>
+                        <option value="Anggota">Anggota</option>
+                      </select>
+                      {pengurusList.length > 1 && (
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            const newList = pengurusList.filter((_, i) => i !== idx);
+                            setPengurusList(newList);
+                          }}
+                          className="p-2 text-red-500 bg-red-50 hover:bg-red-100 rounded-lg"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <button 
+                  type="button" 
+                  onClick={() => setPengurusList([...pengurusList, {nama: "", jabatan: "Anggota"}])}
+                  className="mt-3 text-sm flex items-center text-[#0088cc] hover:text-blue-700 font-medium"
+                >
+                  <Plus size={16} className="mr-1" /> Tambah Anggota
+                </button>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Daftar Kegiatan Utama (Opsional)</label>
-                <textarea value={kegiatanUtama} onChange={e => setKegiatanUtama(e.target.value)} rows={3} className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black focus:ring-[#0088cc] focus:border-[#0088cc]" placeholder="Contoh: 1. Posyandu Balita\n2. Senam Ibu-ibu" />
+                <label className="block text-sm font-medium text-gray-700 mb-2">Daftar Kegiatan Utama (Opsional)</label>
+                <div className="space-y-3">
+                  {kegiatanList.map((kegiatan, idx) => (
+                    <div key={idx} className="flex space-x-2 items-center">
+                      <input 
+                        type="text" 
+                        value={kegiatan} 
+                        onChange={(e) => {
+                          const newList = [...kegiatanList];
+                          newList[idx] = e.target.value;
+                          setKegiatanList(newList);
+                        }}
+                        className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-black focus:ring-[#0088cc] focus:border-[#0088cc]" 
+                        placeholder="Contoh: Posyandu Balita" 
+                      />
+                      {kegiatanList.length > 1 && (
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            const newList = kegiatanList.filter((_, i) => i !== idx);
+                            setKegiatanList(newList);
+                          }}
+                          className="p-2 text-red-500 bg-red-50 hover:bg-red-100 rounded-lg"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <button 
+                  type="button" 
+                  onClick={() => setKegiatanList([...kegiatanList, ""])}
+                  className="mt-3 text-sm flex items-center text-[#0088cc] hover:text-blue-700 font-medium"
+                >
+                  <Plus size={16} className="mr-1" /> Tambah Kegiatan
+                </button>
               </div>
 
               <div className="pt-4 border-t border-gray-100 flex justify-end space-x-3">

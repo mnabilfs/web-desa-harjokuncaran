@@ -16,27 +16,27 @@ export default async function AgendaPage() {
 
   return (
     <div className="flex flex-col w-full bg-white min-h-screen pb-16">
-      <div className="bg-gray-50 border-b border-gray-200 pt-8 pb-8">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <div className="flex items-center text-sm text-gray-500 mb-4">
-            <Link href="/" className="hover:text-[#0088cc] flex items-center">
-              <Home size={16} className="text-[#0088cc]" />
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-gray-500">Informasi</span>
-            <span className="mx-2">/</span>
-            <span className="text-gray-500 font-semibold">Agenda Kegiatan</span>
-          </div>
-          <h1 className="text-3xl font-bold text-[#0088cc] mb-2">Agenda Kegiatan Desa</h1>
-          <p className="text-gray-600">Jadwal acara dan kegiatan penting yang akan dilaksanakan di Desa Harjokuncaran.</p>
+      <div className="container mx-auto px-4 max-w-6xl py-8">
+        
+        {/* Breadcrumb */}
+        <div className="bg-gray-100 py-3 px-4 rounded flex items-center text-sm text-gray-500 mb-8">
+          <Link href="/" className="hover:text-[#0088cc] flex items-center">
+            <Home size={16} className="text-[#0088cc]" />
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-gray-500">Informasi</span>
+          <span className="mx-2">/</span>
+          <span className="text-gray-500">Agenda Kegiatan</span>
         </div>
-      </div>
 
-      <div className="container mx-auto px-4 max-w-3xl mt-12">
-        {(!agendas || agendas.length === 0) ? (
-          <div className="text-center p-12 bg-gray-50 border border-gray-200 rounded-xl text-gray-500">
-            Belum ada agenda kegiatan yang dijadwalkan dalam waktu dekat.
-          </div>
+        <div className="w-full">
+          <h1 className="text-[28px] font-bold text-[#337ab7] mb-8">Agenda Kegiatan</h1>
+          
+          <div className="max-w-3xl">
+            {(!agendas || agendas.length === 0) ? (
+              <div className="text-center p-12 bg-gray-50 border border-gray-200 rounded-xl text-gray-500">
+                Belum ada agenda kegiatan yang dijadwalkan dalam waktu dekat.
+              </div>
         ) : (
           <div className="relative border-l-2 border-[#0088cc] pl-6 md:pl-8 py-2 ml-4 md:ml-6 space-y-10">
             {agendas.map((agenda) => (
@@ -70,8 +70,10 @@ export default async function AgendaPage() {
                 </div>
               </div>
             ))}
+            </div>
+          )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

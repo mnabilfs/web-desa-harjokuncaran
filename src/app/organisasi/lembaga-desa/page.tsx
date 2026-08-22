@@ -12,7 +12,7 @@ export default function LembagaDesaPage() {
   useEffect(() => {
     const fetchLembaga = async () => {
       const supabase = createClient();
-      const { data } = await supabase.from('lembaga_desa').select('*').order('nama');
+      const { data } = await supabase.from('lembaga_desa').select('*').order('urutan', { ascending: true }).order('nama', { ascending: true });
       if (data) setLembaga(data);
       setLoading(false);
     };
@@ -95,12 +95,35 @@ export default function LembagaDesaPage() {
                     <span className="w-8 h-8 bg-blue-100 text-[#0088cc] rounded-lg flex items-center justify-center mr-3">2</span>
                     Pengurus Inti
                   </h3>
-                  <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-                    <div className="flex items-start space-x-3 mb-1">
-                      <Users className="text-[#0088cc] mt-1 shrink-0" size={20} />
-                      <span className="font-medium text-gray-800 whitespace-pre-line leading-relaxed">{activeLembaga.pengurus_inti || "Belum ada data pengurus."}</span>
+                    <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                      <div className="flex items-start space-x-3 mb-1">
+                        <Users className="text-[#0088cc] mt-1 shrink-0" size={20} />
+                        <div className="w-full">
+                          {(() => {
+                            if (!activeLembaga.pengurus_inti) return <span className="text-gray-500">Belum ada data pengurus.</span>;
+                            
+                            try {
+                              const parsed = JSON.parse(activeLembaga.pengurus_inti);
+                              if (Array.isArray(parsed) && parsed.length > 0) {
+                                return (
+                                  <div className="space-y-2 w-full mt-1">
+                                    {parsed.map((p: any, idx: number) => (
+                                      <div key={idx} className="flex justify-between items-center border-b border-gray-100 last:border-0 pb-2 last:pb-0">
+                                        <span className="font-semibold text-gray-800">{p.nama}</span>
+                                        <span className="text-xs font-bold px-2 py-1 bg-blue-50 text-[#0088cc] rounded-full uppercase tracking-wider">{p.jabatan}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                );
+                              }
+                            } catch (e) {
+                              return <span className="font-medium text-gray-800 whitespace-pre-line leading-relaxed">{activeLembaga.pengurus_inti}</span>;
+                            }
+                            return <span className="text-gray-500">Belum ada data pengurus.</span>;
+                          })()}
+                        </div>
+                      </div>
                     </div>
-                  </div>
                 </section>
 
                 {/* Kegiatan Utama */}
@@ -110,9 +133,29 @@ export default function LembagaDesaPage() {
                     Kegiatan Utama
                   </h3>
                   <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
-                    <p className="text-gray-600 font-medium whitespace-pre-line leading-relaxed">
-                      {activeLembaga.kegiatan_utama || "Belum ada data kegiatan."}
-                    </p>
+                    {(() => {
+                      if (!activeLembaga.kegiatan_utama) return <p className="text-gray-600 font-medium">Belum ada data kegiatan.</p>;
+                      
+                      try {
+                        const parsed = JSON.parse(activeLembaga.kegiatan_utama);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                          return (
+                            <ul className="list-disc pl-5 space-y-2 text-gray-600 leading-relaxed text-justify">
+                              {parsed.map((k: string, idx: number) => (
+                                <li key={idx}>{k}</li>
+                              ))}
+                            </ul>
+                          );
+                        }
+                      } catch (e) {
+                        return (
+                          <p className="text-gray-600 font-medium whitespace-pre-line leading-relaxed text-justify">
+                            {activeLembaga.kegiatan_utama}
+                          </p>
+                        );
+                      }
+                      return <p className="text-gray-600 font-medium">Belum ada data kegiatan.</p>;
+                    })()}
                   </div>
                 </section>
               </div>

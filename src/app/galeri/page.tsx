@@ -14,23 +14,22 @@ export default async function GaleriPage() {
 
   return (
     <div className="flex flex-col w-full bg-white min-h-screen pb-16">
-      <div className="bg-gray-50 border-b border-gray-200 pt-8 pb-8">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="flex items-center text-sm text-gray-500 mb-4">
-            <Link href="/" className="hover:text-[#0088cc] flex items-center">
-              <Home size={16} className="text-[#0088cc]" />
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-gray-500">Informasi</span>
-            <span className="mx-2">/</span>
-            <span className="text-gray-500 font-semibold">Galeri</span>
-          </div>
-          <h1 className="text-3xl font-bold text-[#0088cc] mb-2">Galeri Desa</h1>
-          <p className="text-gray-600">Dokumentasi kegiatan dan momen penting di Desa Harjokuncaran.</p>
+      <div className="container mx-auto px-4 max-w-6xl py-8">
+        
+        {/* Breadcrumb */}
+        <div className="bg-gray-100 py-3 px-4 rounded flex items-center text-sm text-gray-500 mb-8">
+          <Link href="/" className="hover:text-[#0088cc] flex items-center">
+            <Home size={16} className="text-[#0088cc]" />
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-gray-500">Informasi</span>
+          <span className="mx-2">/</span>
+          <span className="text-gray-500">Galeri</span>
         </div>
-      </div>
 
-      <div className="container mx-auto px-4 max-w-5xl mt-8">
+        <div className="w-full">
+          <h1 className="text-[28px] font-bold text-[#337ab7] mb-8">Galeri</h1>
+
         {(!galleries || galleries.length === 0) ? (
           <div className="text-center p-12 bg-gray-50 border border-gray-200 rounded-xl text-gray-500">
             Belum ada foto yang diunggah ke Galeri.
@@ -76,6 +75,7 @@ export default async function GaleriPage() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

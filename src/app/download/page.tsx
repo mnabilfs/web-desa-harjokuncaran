@@ -32,22 +32,22 @@ export default function DownloadPage() {
   );
 
   return (
-    <div className="flex flex-col w-full bg-gray-50 min-h-screen pb-16">
-      <div className="bg-white border-b border-gray-200 pt-8 pb-8">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <div className="flex items-center text-sm text-gray-500 mb-4">
-            <Link href="/" className="hover:text-[#0088cc] flex items-center">
-              <Home size={16} className="text-[#0088cc]" />
-            </Link>
-            <span className="mx-2">/</span>
-            <span className="text-gray-500">Informasi</span>
-            <span className="mx-2">/</span>
-            <span className="text-gray-500 font-semibold">Download</span>
-          </div>
-          <h1 className="text-3xl font-bold text-[#0088cc] mb-2">Pusat Unduhan</h1>
-          <p className="text-gray-600">Akses dokumen publik, formulir, dan laporan resmi Desa Harjokuncaran secara langsung.</p>
+    <div className="flex flex-col w-full bg-white min-h-screen pb-16">
+      <div className="container mx-auto px-4 max-w-6xl py-8">
+        
+        {/* Breadcrumb */}
+        <div className="bg-gray-100 py-3 px-4 rounded flex items-center text-sm text-gray-500 mb-8">
+          <Link href="/" className="hover:text-[#0088cc] flex items-center">
+            <Home size={16} className="text-[#0088cc]" />
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-gray-500">Informasi</span>
+          <span className="mx-2">/</span>
+          <span className="text-gray-500">Download</span>
         </div>
-      </div>
+
+        <div className="w-full">
+          <h1 className="text-[28px] font-bold text-[#337ab7] mb-8">Download</h1>
 
       <div className="container mx-auto px-4 max-w-5xl mt-8">
         
@@ -127,6 +127,8 @@ export default function DownloadPage() {
           </div>
         )}
       </div>
+    </div>
+    </div>
     </div>
   );
 }

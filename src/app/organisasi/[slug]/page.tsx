@@ -36,11 +36,6 @@ export default async function OrganisasiSlugPage({ params }: { params: Promise<{
             </div>
             <h3 className="text-xl font-bold mb-1">{name}</h3>
             <p className="text-blue-100 text-sm font-medium mb-4">{jabatanNameTitle}</p>
-            
-            <div className="bg-white/10 rounded-lg p-3 flex items-center justify-center space-x-2 backdrop-blur-sm">
-              <Phone size={16} />
-              <span className="text-sm font-semibold">{contact}</span>
-            </div>
           </div>
         </div>
         

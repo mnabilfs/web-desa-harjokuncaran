@@ -9,7 +9,7 @@ export default function PerangkatDesaAdmin() {
   const [perangkat, setPerangkat] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editForm, setEditForm] = useState({ nama: "", kontak: "", tupoksi: "" });
+  const [editForm, setEditForm] = useState({ nama: "", tupoksi: "" });
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [fotoFile, setFotoFile] = useState<File | null>(null);
@@ -53,7 +53,6 @@ export default function PerangkatDesaAdmin() {
     
     setEditForm({ 
       nama: isDefaultNama ? "" : (p.nama || ""), 
-      kontak: isDefaultKontak ? "" : (p.kontak || ""), 
       tupoksi: p.tupoksi || "" 
     });
     setFotoFile(null);
@@ -86,7 +85,6 @@ export default function PerangkatDesaAdmin() {
       .from('perangkat_desa')
       .update({
         nama: editForm.nama,
-        kontak: editForm.kontak,
         tupoksi: editForm.tupoksi,
         foto_url: finalFotoUrl
       })
@@ -120,7 +118,7 @@ export default function PerangkatDesaAdmin() {
               <tr className="bg-gray-50 border-b border-gray-200">
                 <th className="p-4 font-semibold text-gray-700">Jabatan</th>
                 <th className="p-4 font-semibold text-gray-700">Nama Pejabat</th>
-                <th className="p-4 font-semibold text-gray-700">Kontak</th>
+
                 <th className="p-4 font-semibold text-gray-700">Tupoksi Singkat</th>
                 <th className="p-4 font-semibold text-gray-700 text-center">Foto</th>
                 <th className="p-4 font-semibold text-gray-700 text-center">Aksi</th>
@@ -158,15 +156,7 @@ export default function PerangkatDesaAdmin() {
                               placeholder="Nama Pejabat"
                             />
                           </td>
-                          <td className="p-4">
-                            <input 
-                              type="text" 
-                              value={editForm.kontak} 
-                              onChange={e => setEditForm({...editForm, kontak: e.target.value})}
-                              className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-black focus:ring-[#0088cc] focus:border-[#0088cc]"
-                              placeholder="Nomor Telepon/Email"
-                            />
-                          </td>
+
                           <td className="p-4">
                             <textarea 
                               value={editForm.tupoksi} 
@@ -202,7 +192,7 @@ export default function PerangkatDesaAdmin() {
                       ) : (
                         <>
                           <td className="p-4 text-gray-700">{p.nama}</td>
-                          <td className="p-4 text-gray-700">{p.kontak}</td>
+
                           <td className="p-4 text-gray-600 text-sm max-w-xs line-clamp-3" title={p.tupoksi}>
                             {p.tupoksi}
                           </td>

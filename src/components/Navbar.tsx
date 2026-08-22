@@ -32,7 +32,7 @@ export default function Navbar() {
       hasDropdown: true,
       subItems: [
         { name: "Struktur Organisasi", href: "/organisasi" },
-        { name: "Perangkat Desa", href: "/organisasi/sekretaris-desa" },
+        { name: "Perangkat Desa", href: "/organisasi/kepala-desa" },
         { name: "Lembaga Desa", href: "/organisasi/lembaga-desa" }
       ]
     },
