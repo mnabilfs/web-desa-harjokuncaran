@@ -10,6 +10,7 @@ export default function OrganisasiWrapper({ children }: { children: React.ReactN
   const sidebarMenus = [
     { name: "Struktur Organisasi", href: "/organisasi" },
     { name: "Kepala Desa", href: "/organisasi/kepala-desa" },
+    { name: "Sekretaris Desa", href: "/organisasi/sekretaris-desa" },
     { name: "Kepala Urusan Umum", href: "/organisasi/kepala-urusan-umum" },
     { name: "Kepala Urusan Keuangan", href: "/organisasi/kepala-urusan-keuangan" },
     { name: "Kepala Urusan Perencanaan", href: "/organisasi/kepala-urusan-perencanaan" },
