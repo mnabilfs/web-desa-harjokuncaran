@@ -168,7 +168,18 @@ export default function PerangkatDesaAdmin() {
                           </td>
                           <td className="p-4 text-center">
                             <input type="file" accept="image/*" onChange={e => setFotoFile(e.target.files?.[0] || null)} className="w-full border border-gray-300 rounded px-2 py-1 text-sm text-black" />
-                            {existingFotoUrl && !fotoFile && <span className="text-xs text-green-600 block mt-1">Ada foto</span>}
+                            {existingFotoUrl && !fotoFile && (
+                              <div className="flex flex-col items-center mt-2">
+                                <span className="text-xs text-green-600 mb-1">Ada foto tersimpan</span>
+                                <button 
+                                  type="button"
+                                  onClick={() => setExistingFotoUrl(null)} 
+                                  className="text-xs text-red-500 hover:text-red-700 underline font-medium cursor-pointer"
+                                >
+                                  Hapus Foto Saat Ini
+                                </button>
+                              </div>
+                            )}
                           </td>
                           <td className="p-4 text-center whitespace-nowrap">
                             <button 
